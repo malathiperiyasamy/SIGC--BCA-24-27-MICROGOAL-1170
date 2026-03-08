@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en" data-theme="funky">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Goals API Client</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="bg">
+      <div class="blob blob-a" aria-hidden="true"></div>
+      <div class="blob blob-b" aria-hidden="true"></div>
+      <div class="grid" aria-hidden="true"></div>
+    </div>
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brand-text">
+          <div class="brand-title">Goals API Client</div>
+          <div class="brand-sub">HTML • CSS • JS</div>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="pill">
+          <span class="pill-label">Backend</span>
+          <input
+            id="baseUrl"
+            class="pill-input"
+            type="url"
+            inputmode="url"
+            value="http://localhost:8000"
+            aria-label="Backend base URL"
+          />
+          <button id="pingBtn" class="btn btn-ghost" type="button" title="Ping backend">
+            Ping
+          </button>
+        </div>
+
+        <button id="themeBtn" class="btn btn-primary" type="button">
+          Funky Mode
+        </button>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero card">
+        <div class="hero-left">
+          <h1>Use your backend APIs with a clean UI</h1>
+          <p class="muted">
+            This frontend talks to your existing endpoints:
+            <span class="mono">POST /signup</span>, <span class="mono">POST /login</span>,
+            <span class="mono">POST /create</span>, <span class="mono">GET /:id</span>,
+            <span class="mono">PUT /:id</span>, <span class="mono">DELETE /:id</span>.
+          </p>
+        </div>
+        <div class="hero-right">
+          <div class="status">
+            <div class="dot" id="statusDot" aria-hidden="true"></div>
+            <div class="status-text">
+              <div class="status-title" id="statusTitle">Not connected</div>
+              <div class="status-sub muted" id="statusSub">
+                Click Ping to test your backend
+              </div>
+            </div>
+          </div>
+          <div class="hint">
+            Tip: keep backend running at <span class="mono">localhost:8000</span> (or change it above).
+          </div>
+        </div>
+      </section>
+
+      <section class="grid-2">
+        <section class="card">
+          <div class="card-header">
+            <h2>Authentication</h2>
+            <div class="chips">
+              <span class="chip">JWT</span>
+              <span class="chip">bcrypt</span>
+              <span class="chip">mongoose</span>
+            </div>
+          </div>
+
+          <div class="tabs" role="tablist" aria-label="Auth tabs">
+            <button class="tab is-active" type="button" data-tab="login" role="tab">
+              Login
+            </button>
+            <button class="tab" type="button" data-tab="signup" role="tab">Signup</button>
+          </div>
+
+          <div class="tabpanes">
+            <form id="loginForm" class="pane is-active" data-pane="login">
+              <div class="row">
+                <label class="field">
+                  <span>Email</span>
+                  <input id="loginEmail" type="email" autocomplete="email" required />
+                </label>
+              </div>
+              <div class="row">
+                <label class="field">
+                  <span>Password</span>
+                  <input
+                    id="loginPassword"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                  />
+                </label>
+              </div>
+
+              <div class="row row-actions">
+                <button class="btn btn-primary" type="submit">Login</button>
+                <button id="logoutBtn" class="btn btn-ghost" type="button" disabled>
+                  Logout
+                </button>
+              </div>
+
+              <div class="tokenbox">
+                <div class="tokenbox-top">
+                  <div class="tokenbox-title">Token</div>
+                  <button id="copyTokenBtn" class="btn btn-ghost btn-sm" type="button" disabled>
+                    Copy
+                  </button>
+                </div>
+                <textarea
+                  id="tokenText"
+                  class="tokenbox-text mono"
+                  rows="4"
+                  readonly
+                  placeholder="Login to get a token…"
+                ></textarea>
+              </div>
+            </form>
+
+            <form id="signupForm" class="pane" data-pane="signup">
+              <div class="row">
+                <label class="field">
+                  <span>Name</span>
+                  <input id="signupName" type="text" autocomplete="name" required />
+                </label>
+              </div>
+              <div class="row">
+                <label class="field">
+                  <span>Email</span>
+                  <input id="signupEmail" type="email" autocomplete="email" required />
+                </label>
+              </div>
+              <div class="row">
+                <label class="field">
+                  <span>Password</span>
+                  <input
+                    id="signupPassword"
+                    type="password"
+                    autocomplete="new-password"
+                    minlength="6"
+                    required
+                  />
+                </label>
+              </div>
+
+              <div class="row row-actions">
+                <button class="btn btn-primary" type="submit">Create account</button>
+                <button id="switchToLoginBtn" class="btn btn-ghost" type="button">
+                  I already have an account
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <h2>Goals</h2>
+            <div class="chips">
+              <span class="chip">Create</span>
+              <span class="chip">Fetch</span>
+              <span class="chip">Complete</span>
+              <span class="chip">Delete</span>
+            </div>
+          </div>
+
+          <div class="notice" id="authNotice">
+            Login first to enable goal actions.
+          </div>
+
+          <form id="createGoalForm" class="block" autocomplete="off">
+            <div class="row">
+              <label class="field">
+                <span>New goal title</span>
+                <input id="goalTitle" type="text" placeholder="e.g. Ship the MVP" required />
+              </label>
+            </div>
+            <div class="row row-actions">
+              <button class="btn btn-primary" type="submit" disabled id="createBtn">
+                Create goal
+              </button>
+              <button class="btn btn-ghost" type="button" id="clearLocalBtn">
+                Clear local list
+              </button>
+            </div>
+          </form>
+
+          <div class="divider"></div>
+
+          <form id="goalOpsForm" class="block" autocomplete="off">
+            <div class="row">
+              <label class="field">
+                <span>Goal ID</span>
+                <input id="goalId" type="text" placeholder="Paste a goal _id here" />
+              </label>
+            </div>
+            <div class="row row-actions">
+              <button class="btn btn-ghost" type="button" id="fetchBtn" disabled>Fetch</button>
+              <button class="btn btn-ghost" type="button" id="toggleCompleteBtn" disabled>
+                Toggle completed
+              </button>
+              <button class="btn btn-danger" type="button" id="deleteBtn" disabled>Delete</button>
+            </div>
+          </form>
+
+          <div class="goal-preview" id="goalPreview">
+            <div class="muted">No goal selected.</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="block">
+            <div class="block-title">Local goals (created in this UI)</div>
+            <div class="goals" id="goalsList"></div>
+            <div class="muted tiny">
+              Your backend doesn’t include a “list all goals” endpoint yet, so this list is stored locally for convenience.
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <div class="toasts" id="toasts" aria-live="polite" aria-relevant="additions"></div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
+
